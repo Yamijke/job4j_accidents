@@ -1,42 +1,45 @@
 package ru.job4j.accidents.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.job4j.accidents.model.Accident;
-import ru.job4j.accidents.repository.AccidentMem;
+import ru.job4j.accidents.model.AccidentType;
+import ru.job4j.accidents.model.Rule;
+import ru.job4j.accidents.repository.AccidentJdbcTemplate;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
-public class AccidentService implements AccidentServiceInterface {
-    private final AccidentMem accidentMem;
+@AllArgsConstructor
+public class AccidentService {
+    private final AccidentJdbcTemplate accidentJdbcTemplate;
 
-    public AccidentService(AccidentMem accidentMem) {
-        this.accidentMem = accidentMem;
-    }
-
-    @Override
     public Accident save(Accident accident) {
-        return accidentMem.save(accident);
+        return accidentJdbcTemplate.save(accident);
     }
 
-    @Override
     public Optional<Accident> findById(int id) {
-        return accidentMem.findById(id);
+        return accidentJdbcTemplate.findById(id);
     }
 
-    @Override
-    public Collection<Accident> findAll() {
-        return accidentMem.findAll();
+    public List<Accident> findAll() {
+        return accidentJdbcTemplate.findAll();
     }
 
-    @Override
     public boolean update(Accident accident) {
-        return accidentMem.update(accident);
+        return accidentJdbcTemplate.update(accident);
     }
 
-    @Override
     public void deleteById(int id) {
-        accidentMem.deleteById(id);
+        accidentJdbcTemplate.deleteById(id);
+    }
+
+    public List<AccidentType> getAllAccidentTypes() {
+        return accidentJdbcTemplate.findAllAccidentTypes();
+    }
+
+    public List<Rule> getAllRules() {
+        return accidentJdbcTemplate.findAllRules();
     }
 }

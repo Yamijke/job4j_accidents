@@ -13,8 +13,9 @@ import ru.job4j.accidents.model.Rule;
 import ru.job4j.accidents.service.AccidentService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @AllArgsConstructor
@@ -23,16 +24,9 @@ public class AccidentController {
 
     @GetMapping("/createAccident")
     public String viewCreateAccident(Model model) {
-        List<AccidentType> types = new ArrayList<>();
-        types.add(new AccidentType(1, "Two cars"));
-        types.add(new AccidentType(2, "Car and human"));
-        types.add(new AccidentType(3, "Car and  велосипед"));
+        List<AccidentType> types = accidentService.getAllAccidentTypes();
         model.addAttribute("types", types);
-        List<Rule> rules = List.of(
-                new Rule(1, "Статья. 1"),
-                new Rule(2, "Статья. 2"),
-                new Rule(3, "Статья. 3")
-        );
+        List<Rule> rules = accidentService.getAllRules();
         model.addAttribute("rules", rules);
         return "createAccident";
     }
@@ -40,6 +34,15 @@ public class AccidentController {
     @PostMapping("/saveAccident")
     public String save(@ModelAttribute Accident accident, HttpServletRequest req) {
         String[] ids = req.getParameterValues("rIds");
+        if (ids != null) {
+            Set<Rule> rules = new HashSet<>();
+            for (String id : ids) {
+                rules.add(new Rule(Integer.parseInt(id), ""));
+            }
+            accident.setRules(rules);
+        } else {
+            accident.setRules(new HashSet<>()); // Инициализация пустым набором правил
+        }
         accidentService.save(accident);
         return "redirect:/index";
     }
@@ -52,11 +55,31 @@ public class AccidentController {
             return "templates/errors/404";
         }
         model.addAttribute("accident", accidentOptional.get());
+        List<AccidentType> types = accidentService.getAllAccidentTypes();
+        model.addAttribute("types", types);
+        List<Rule> rules = accidentService.getAllRules();
+        model.addAttribute("rules", rules);
         return "editAccident";
     }
 
     @PostMapping("/updateAccident")
-    public String update(@ModelAttribute Accident accident, Model model) {
+    public String update(@ModelAttribute Accident accident, HttpServletRequest req, Model model) {
+        String[] ids = req.getParameterValues("rIds");
+        if (ids != null) {
+            Set<Rule> rules = new HashSet<>();
+            for (String id : ids) {
+                rules.add(new Rule(Integer.parseInt(id), ""));
+            }
+            accident.setRules(rules);
+        } else {
+            accident.setRules(new HashSet<>());
+        }
+        String typeId = req.getParameter("type.id");
+        if (typeId != null && !typeId.isEmpty()) {
+            AccidentType type = new AccidentType();
+            type.setId(Integer.parseInt(typeId));
+            accident.setType(type);
+        }
         var isUpdated = accidentService.update(accident);
         if (!isUpdated) {
             model.addAttribute("message", "Accident with the specified identifier not found");

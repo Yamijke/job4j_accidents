@@ -1,6 +1,5 @@
 package ru.job4j.accidents.repository;
 
-import org.springframework.stereotype.Repository;
 import ru.job4j.accidents.model.Accident;
 import ru.job4j.accidents.model.AccidentType;
 import ru.job4j.accidents.model.Rule;
@@ -8,7 +7,6 @@ import ru.job4j.accidents.model.Rule;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Repository
 public class AccidentMem implements AccidentMemInterface {
     private static final AccidentMem INSTANCE = new AccidentMem();
     private int nextId = 1;
