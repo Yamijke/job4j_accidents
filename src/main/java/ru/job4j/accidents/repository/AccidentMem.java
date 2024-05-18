@@ -43,7 +43,7 @@ public class AccidentMem implements AccidentMemInterface {
     @Override
     public boolean update(Accident accident) {
         return accidents.computeIfPresent(accident.getId(),
-                (id, oldAccident) -> new Accident(oldAccident.getId(), accident.getName(), accident.getText(), accident.getAddress(), new AccidentType())) != null;
+                (id, oldAccident) -> new Accident(oldAccident.getId(), accident.getName(), accident.getText(), accident.getAddress(), accident.getType())) != null;
     }
 
     @Override

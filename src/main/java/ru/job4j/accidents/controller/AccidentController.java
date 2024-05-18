@@ -47,8 +47,12 @@ public class AccidentController {
     }
 
     @PostMapping("/updateAccident")
-    public String update(@ModelAttribute Accident accident) {
-        accidentService.update(accident);
+    public String update(@ModelAttribute Accident accident, Model model) {
+        var isUpdated = accidentService.update(accident);
+        if (!isUpdated) {
+            model.addAttribute("message", "Accident with the specified identifier not found");
+            return "templates/errors/404";
+        }
         return "redirect:/index";
     }
 }
