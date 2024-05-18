@@ -8,7 +8,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.job4j.accidents.model.Accident;
+import ru.job4j.accidents.model.AccidentType;
 import ru.job4j.accidents.service.AccidentService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @AllArgsConstructor
@@ -16,7 +20,12 @@ public class AccidentController {
     private final AccidentService accidentService;
 
     @GetMapping("/createAccident")
-    public String viewCreateAccident() {
+    public String viewCreateAccident(Model model) {
+        List<AccidentType> types = new ArrayList<>();
+        types.add(new AccidentType(1, "Two cars"));
+        types.add(new AccidentType(2, "Car and human"));
+        types.add(new AccidentType(3, "Car and  велосипед"));
+        model.addAttribute("types", types);
         return "createAccident";
     }
 

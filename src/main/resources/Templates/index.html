@@ -33,6 +33,7 @@
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
                 <th scope="col">Address</th>
+                <th scope="col">Accident type</th>
             </tr>
             </thead>
             <tbody>
@@ -40,6 +41,7 @@
                 <td th:text="${accident.id}"></td>
                 <td><a th:text="${accident.name}" th:href="@{'/' + ${accident.id}}"></a></td>
                 <td th:text="${accident.address}"></td>
+                <td th:text="${accident.type.name}"></td>
             </tr>
             </tbody>
         </table>
