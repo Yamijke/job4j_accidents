@@ -41,7 +41,7 @@ public class AccidentController {
             }
             accident.setRules(rules);
         } else {
-            accident.setRules(new HashSet<>()); // Инициализация пустым набором правил
+            accident.setRules(new HashSet<>());
         }
         accidentService.save(accident);
         return "redirect:/index";
