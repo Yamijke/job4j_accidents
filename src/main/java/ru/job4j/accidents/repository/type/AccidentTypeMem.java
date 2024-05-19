@@ -1,5 +1,6 @@
 package ru.job4j.accidents.repository.type;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.job4j.accidents.model.AccidentType;
 
@@ -11,18 +12,14 @@ import java.util.concurrent.ConcurrentHashMap;
 @Repository
 public class AccidentTypeMem implements AccidentTypeMemInterface {
 
-    private static final AccidentTypeMem INSTANCE = new AccidentTypeMem();
     private int nextId = 1;
     private Map<Integer, AccidentType> types = new ConcurrentHashMap<>();
 
-    private AccidentTypeMem() {
-        save(new AccidentType(0, "Two cars"));
-        save(new AccidentType(0, "Car and Human"));
-        save(new AccidentType(0, "Car and bicycle"));
-    }
-
-    public static AccidentTypeMem getInstance() {
-        return INSTANCE;
+    @Autowired
+    public AccidentTypeMem() {
+        save(new AccidentType(1, "Type1"));
+        save(new AccidentType(2, "Type2"));
+        save(new AccidentType(3, "Type3"));
     }
 
     @Override

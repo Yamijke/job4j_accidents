@@ -2,17 +2,20 @@ package ru.job4j.accidents.service.accident;
 
 import org.springframework.stereotype.Service;
 import ru.job4j.accidents.model.Accident;
+import ru.job4j.accidents.model.AccidentRule;
 import ru.job4j.accidents.repository.accident.AccidentMem;
+import ru.job4j.accidents.service.rule.AccidentRuleService;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AccidentService implements AccidentServiceInterface {
     private final AccidentMem accidentMem;
+    private final AccidentRuleService accidentRuleService;
 
-    public AccidentService(AccidentMem accidentMem) {
+    public AccidentService(AccidentMem accidentMem, AccidentRuleService accidentRuleService) {
         this.accidentMem = accidentMem;
+        this.accidentRuleService = accidentRuleService;
     }
 
     @Override
@@ -38,5 +41,13 @@ public class AccidentService implements AccidentServiceInterface {
     @Override
     public void deleteById(int id) {
         accidentMem.deleteById(id);
+    }
+
+    public Set<AccidentRule> getRulesByIds(List<Integer> ruleIds) {
+        Set<AccidentRule> rules = new HashSet<>();
+        for (Integer id : ruleIds) {
+            accidentRuleService.findById(id).ifPresent(rules::add);
+        }
+        return rules;
     }
 }

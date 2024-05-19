@@ -1,7 +1,9 @@
 package ru.job4j.accidents.repository.accident;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.job4j.accidents.model.Accident;
+import ru.job4j.accidents.repository.rule.AccidentRuleMem;
 import ru.job4j.accidents.repository.type.AccidentTypeMem;
 
 import java.util.*;
@@ -9,19 +11,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public class AccidentMem implements AccidentMemInterface {
-    private static final AccidentMem INSTANCE = new AccidentMem();
     private int nextId = 1;
     private Map<Integer, Accident> accidents = new ConcurrentHashMap<>();
 
-    private AccidentMem() {
-        AccidentTypeMem accidentTypeMem = AccidentTypeMem.getInstance();
-        save(new Accident(0, "test", "test", "test", accidentTypeMem.findById(1).orElse(null)));
-        save(new Accident(0, "test1", "test1", "test1", accidentTypeMem.findById(2).orElse(null)));
-        save(new Accident(0, "test2", "test2", "test2", accidentTypeMem.findById(3).orElse(null)));
-    }
-
-    public static AccidentMem getInstance() {
-        return INSTANCE;
+    @Autowired
+    public AccidentMem(AccidentTypeMem accidentTypeMem, AccidentRuleMem accidentRuleMem) {
+        save(new Accident(0, "test", "test", "test", accidentTypeMem.findById(1).orElse(null), accidentRuleMem.findAll()));
+        save(new Accident(0, "test1", "test1", "test1", accidentTypeMem.findById(2).orElse(null), accidentRuleMem.findAll()));
+        save(new Accident(0, "test2", "test2", "test2", accidentTypeMem.findById(3).orElse(null), accidentRuleMem.findAll()));
     }
 
     @Override
@@ -48,7 +45,8 @@ public class AccidentMem implements AccidentMemInterface {
                         accident.getName(),
                         accident.getText(),
                         accident.getAddress(),
-                        accident.getType())) != null;
+                        accident.getType(),
+                        accident.getRules())) != null;
     }
 
     @Override

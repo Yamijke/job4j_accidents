@@ -54,8 +54,11 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="address">Accident type</label>
-                        <input type="text" class="form-control" name="type.name" id="type.name" th:field="*{type.name}">
+                        <label for="ruleIds">Rules</label>
+                        <select class="form-control" id="ruleIds" name="ruleIds" multiple>
+                            <option th:each="rule: ${rules}" th:value="${rule.id}" th:text="${rule.name}"
+                                    th:selected="${accident.rules.contains(rule)}"></option>
+                        </select>
                     </div>
                     <button type="submit" class="btn btn-primary mt-3">Save</button>
                 </form>
