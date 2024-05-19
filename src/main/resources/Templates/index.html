@@ -39,7 +39,7 @@
             <tbody>
             <tr th:each="accident : ${accidents}">
                 <td th:text="${accident.id}"></td>
-                <td><a th:text="${accident.name}" th:href="@{'/' + ${accident.id}}"></a></td>
+                <td><a th:text="${accident.name}" th:href="@{'/editAccident/' + ${accident.id}}"></a></td>
                 <td th:text="${accident.address}"></td>
                 <td th:text="${accident.type.name}"></td>
             </tr>

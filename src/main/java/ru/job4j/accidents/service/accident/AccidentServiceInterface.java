@@ -1,4 +1,4 @@
-package ru.job4j.accidents.service;
+package ru.job4j.accidents.service.accident;
 
 import ru.job4j.accidents.model.Accident;
 
