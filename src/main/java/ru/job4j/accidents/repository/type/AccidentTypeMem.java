@@ -8,23 +8,24 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 public class AccidentTypeMem implements AccidentTypeMemInterface {
 
-    private int nextId = 1;
+    private AtomicInteger nextId = new AtomicInteger(1);
     private Map<Integer, AccidentType> types = new ConcurrentHashMap<>();
 
     @Autowired
     public AccidentTypeMem() {
-        save(new AccidentType(1, "Type1"));
-        save(new AccidentType(2, "Type2"));
-        save(new AccidentType(3, "Type3"));
+        save(new AccidentType(0, "Type1"));
+        save(new AccidentType(0, "Type2"));
+        save(new AccidentType(0, "Type3"));
     }
 
     @Override
     public AccidentType save(AccidentType type) {
-        type.setId(nextId++);
+        type.setId(nextId.getAndIncrement());
         types.put(type.getId(), type);
         return type;
     }

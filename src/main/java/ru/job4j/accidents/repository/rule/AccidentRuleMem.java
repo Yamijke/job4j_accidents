@@ -8,10 +8,11 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 public class AccidentRuleMem implements AccidentRuleMemInterface {
-    private int nextId = 1;
+    private AtomicInteger nextId = new AtomicInteger(1);
     private Map<Integer, AccidentRule> rules = new ConcurrentHashMap<>();
 
     @Autowired
@@ -23,7 +24,7 @@ public class AccidentRuleMem implements AccidentRuleMemInterface {
 
     @Override
     public AccidentRule save(AccidentRule rule) {
-        rule.setId(nextId++);
+        rule.setId(nextId.getAndIncrement());
         rules.put(rule.getId(), rule);
         return rule;
     }

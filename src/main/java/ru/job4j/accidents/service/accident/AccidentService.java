@@ -43,11 +43,7 @@ public class AccidentService implements AccidentServiceInterface {
         accidentMem.deleteById(id);
     }
 
-    public Set<AccidentRule> getRulesByIds(List<Integer> ruleIds) {
-        Set<AccidentRule> rules = new HashSet<>();
-        for (Integer id : ruleIds) {
-            accidentRuleService.findById(id).ifPresent(rules::add);
-        }
-        return rules;
+    public Collection<AccidentRule> getRulesByIds(Collection<Integer> ruleIds) {
+        return accidentMem.findRulesByIds(ruleIds);
     }
 }
