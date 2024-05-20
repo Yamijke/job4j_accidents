@@ -2,48 +2,43 @@ package ru.job4j.accidents.service.accident;
 
 import org.springframework.stereotype.Service;
 import ru.job4j.accidents.model.Accident;
-import ru.job4j.accidents.model.AccidentRule;
-import ru.job4j.accidents.repository.accident.AccidentMem;
+import ru.job4j.accidents.repository.jdbc.AccidentJdbcTemplate;
 import ru.job4j.accidents.service.rule.AccidentRuleService;
 
 import java.util.*;
 
 @Service
 public class AccidentService implements AccidentServiceInterface {
-    private final AccidentMem accidentMem;
+    private final AccidentJdbcTemplate accidentsRepository;
     private final AccidentRuleService accidentRuleService;
 
-    public AccidentService(AccidentMem accidentMem, AccidentRuleService accidentRuleService) {
-        this.accidentMem = accidentMem;
+    public AccidentService(AccidentJdbcTemplate accidentsRepository, AccidentRuleService accidentRuleService) {
+        this.accidentsRepository = accidentsRepository;
         this.accidentRuleService = accidentRuleService;
     }
 
     @Override
     public Accident save(Accident accident) {
-        return accidentMem.save(accident);
+        return accidentsRepository.save(accident);
     }
 
     @Override
     public Optional<Accident> findById(int id) {
-        return accidentMem.findById(id);
+        return accidentsRepository.findById(id);
     }
 
     @Override
     public Collection<Accident> findAll() {
-        return accidentMem.findAll();
+        return accidentsRepository.findAll();
     }
 
     @Override
     public boolean update(Accident accident) {
-        return accidentMem.update(accident);
+        return accidentsRepository.update(accident);
     }
 
     @Override
     public void deleteById(int id) {
-        accidentMem.deleteById(id);
-    }
-
-    public Collection<AccidentRule> getRulesByIds(Collection<Integer> ruleIds) {
-        return accidentMem.findRulesByIds(ruleIds);
+        accidentsRepository.deleteById(id);
     }
 }

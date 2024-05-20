@@ -9,6 +9,7 @@ import ru.job4j.accidents.service.accident.AccidentService;
 import ru.job4j.accidents.service.rule.AccidentRuleService;
 import ru.job4j.accidents.service.type.AccidentTypeService;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Controller
@@ -29,7 +30,7 @@ public class AccidentController {
     @PostMapping("/saveAccident")
     public String save(@ModelAttribute Accident accident, @RequestParam("typeId") int typeId, @RequestParam("ruleIds") List<Integer> ruleIds) {
         accident.setType(accidentTypeService.findById(typeId).orElse(null));
-        accident.setRules(accidentService.getRulesByIds(ruleIds));
+        accident.setRules(new HashSet<>(accidentRuleService.findByIds(ruleIds)));
         accidentService.save(accident);
         return "redirect:/index";
     }
@@ -50,7 +51,7 @@ public class AccidentController {
     @PostMapping("/updateAccident")
     public String update(@ModelAttribute Accident accident, @RequestParam("typeId") int typeId, @RequestParam("ruleIds") List<Integer> ruleIds) {
         accident.setType(accidentTypeService.findById(typeId).orElse(null));
-        accident.setRules(accidentService.getRulesByIds(ruleIds));
+        accident.setRules(new HashSet<>(accidentRuleService.findByIds(ruleIds)));
         accidentService.update(accident);
         return "redirect:/index";
     }

@@ -34,6 +34,10 @@ public class AccidentRuleService implements AccidentRuleServiceInterface {
         return accidentRuleMem.update(rule);
     }
 
+    public Collection<AccidentRule> findByIds(List<Integer> ids) {
+        return accidentRuleMem.findByIds(ids);
+    }
+
     @Override
     public void deleteById(int id) {
         accidentRuleMem.deleteById(id);

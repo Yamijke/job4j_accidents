@@ -15,4 +15,6 @@ public interface AccidentRuleMemInterface {
     boolean update(AccidentRule rule);
 
     void deleteById(int id);
+
+    Collection<AccidentRule> findByIds(Collection<Integer> ids);
 }
