@@ -3,10 +3,8 @@ package ru.job4j.accidents.repository.accident;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.job4j.accidents.model.Accident;
-import ru.job4j.accidents.model.AccidentRule;
 import ru.job4j.accidents.repository.rule.AccidentRuleMem;
 import ru.job4j.accidents.repository.type.AccidentTypeMem;
-import ru.job4j.accidents.repository.rule.AccidentRuleMem;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,11 +14,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class AccidentMem implements AccidentMemInterface {
     private AtomicInteger nextId = new AtomicInteger(1);
     private Map<Integer, Accident> accidents = new ConcurrentHashMap<>();
-    private AccidentRuleMem accidentRuleMem;
 
     @Autowired
     public AccidentMem(AccidentTypeMem accidentTypeMem, AccidentRuleMem accidentRuleMem) {
-        this.accidentRuleMem = accidentRuleMem;
         save(new Accident(0, "test", "test", "test", accidentTypeMem.findById(1).orElse(null), accidentRuleMem.findAll()));
         save(new Accident(0, "test1", "test1", "test1", accidentTypeMem.findById(2).orElse(null), accidentRuleMem.findAll()));
         save(new Accident(0, "test2", "test2", "test2", accidentTypeMem.findById(3).orElse(null), accidentRuleMem.findAll()));
@@ -57,14 +53,5 @@ public class AccidentMem implements AccidentMemInterface {
     @Override
     public void deleteById(int id) {
         accidents.remove(id);
-    }
-
-    @Override
-    public Collection<AccidentRule> findRulesByIds(Collection<Integer> ruleIds) {
-        Set<AccidentRule> rules = new HashSet<>();
-        for (Integer id : ruleIds) {
-            accidentRuleMem.findById(id).ifPresent(rules::add);
-        }
-        return rules;
     }
 }
