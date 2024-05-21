@@ -2,19 +2,16 @@ package ru.job4j.accidents.service.accident;
 
 import org.springframework.stereotype.Service;
 import ru.job4j.accidents.model.Accident;
-import ru.job4j.accidents.repository.jdbc.AccidentJdbcTemplate;
-import ru.job4j.accidents.service.rule.AccidentRuleService;
+import ru.job4j.accidents.repository.hbm.AccidentHibernate;
 
 import java.util.*;
 
 @Service
 public class AccidentService implements AccidentServiceInterface {
-    private final AccidentJdbcTemplate accidentsRepository;
-    private final AccidentRuleService accidentRuleService;
+    private final AccidentHibernate accidentsRepository;
 
-    public AccidentService(AccidentJdbcTemplate accidentsRepository, AccidentRuleService accidentRuleService) {
+    public AccidentService(AccidentHibernate accidentsRepository) {
         this.accidentsRepository = accidentsRepository;
-        this.accidentRuleService = accidentRuleService;
     }
 
     @Override
