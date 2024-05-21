@@ -65,41 +65,73 @@ public class AccidentJdbcTemplate {
     }
 
     public List<Accident> findAll() {
-        return jdbc.query("select a.id, a.name, a.text, a.address, a.type_id, t.name as type_name "
-                        + "from accidents a "
-                        + "join accident_types t on a.type_id = t.id",
-                (rs, row) -> {
-                    Accident accident = new Accident();
-                    accident.setId(rs.getInt("id"));
+        String sql = "SELECT a.id, a.name, a.text, a.address, a.type_id, t.name as type_name, "
+                + "r.id as rule_id, r.name as rule_name "
+                + "FROM accidents a "
+                + "JOIN accident_types t ON a.type_id = t.id "
+                + "LEFT JOIN accidents_rules ar ON a.id = ar.accident_id "
+                + "LEFT JOIN rules r ON ar.rule_id = r.id";
+        return jdbc.query(sql, rs -> {
+            Map<Integer, Accident> accidentMap = new HashMap<>();
+            while (rs.next()) {
+                int accidentId = rs.getInt("id");
+                Accident accident = accidentMap.get(accidentId);
+                if (accident == null) {
+                    accident = new Accident();
+                    accident.setId(accidentId);
                     accident.setName(rs.getString("name"));
                     accident.setText(rs.getString("text"));
                     accident.setAddress(rs.getString("address"));
                     accident.setType(new AccidentType(rs.getInt("type_id"), rs.getString("type_name")));
-                    accident.setRules(Set.of(new AccidentRule()));
-                    return accident;
-                });
+                    accident.setRules(new HashSet<>());
+                    accidentMap.put(accidentId, accident);
+                }
+                int ruleId = rs.getInt("rule_id");
+                if (ruleId > 0) {
+                    AccidentRule rule = new AccidentRule();
+                    rule.setId(ruleId);
+                    rule.setName(rs.getString("rule_name"));
+                    accident.getRules().add(rule);
+                }
+            }
+            return new ArrayList<>(accidentMap.values());
+        });
     }
 
     public Optional<Accident> findById(int id) {
-        Accident res = jdbc.queryForObject("select id, name, text, address, type_id "
-                        + "from accidents where id = ?",
-                (rs, row) -> {
-                    Accident accident = new Accident();
-                    accident.setId(rs.getInt("id"));
+        String sql = "SELECT a.id, a.name, a.text, a.address, a.type_id, t.name as type_name, "
+                + "r.id as rule_id, r.name as rule_name "
+                + "FROM accidents a "
+                + "JOIN accident_types t ON a.type_id = t.id "
+                + "LEFT JOIN accidents_rules ar ON a.id = ar.accident_id "
+                + "LEFT JOIN rules r ON ar.rule_id = r.id "
+                + "WHERE a.id = ?";
+        List<Accident> accidents = jdbc.query(sql, rs -> {
+            Map<Integer, Accident> accidentMap = new HashMap<>();
+            while (rs.next()) {
+                int accidentId = rs.getInt("id");
+                Accident accident = accidentMap.get(accidentId);
+                if (accident == null) {
+                    accident = new Accident();
+                    accident.setId(accidentId);
                     accident.setName(rs.getString("name"));
                     accident.setText(rs.getString("text"));
                     accident.setAddress(rs.getString("address"));
-                    accident.setType(new AccidentType(rs.getInt("type_id"), ""));
-                    return accident;
-                }, id);
-        List<AccidentRule> rules = jdbc.query("select rule_id from accidents_rules where accident_id = ?",
-                (rs, row) -> {
+                    accident.setType(new AccidentType(rs.getInt("type_id"), rs.getString("type_name")));
+                    accident.setRules(new HashSet<>());
+                    accidentMap.put(accidentId, accident);
+                }
+                int ruleId = rs.getInt("rule_id");
+                if (ruleId > 0) {
                     AccidentRule rule = new AccidentRule();
-                    rule.setId(rs.getInt("rule_id"));
-                    return rule;
-                }, id);
-        res.setRules(new HashSet<>(rules));
-        return Optional.ofNullable(res);
+                    rule.setId(ruleId);
+                    rule.setName(rs.getString("rule_name"));
+                    accident.getRules().add(rule);
+                }
+            }
+            return new ArrayList<>(accidentMap.values());
+        }, id);
+        return accidents.isEmpty() ? Optional.empty() : Optional.of(accidents.get(0));
     }
 
     public Collection<AccidentType> findAllAccidentTypes() {
