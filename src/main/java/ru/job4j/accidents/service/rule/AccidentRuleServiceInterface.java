@@ -12,7 +12,5 @@ public interface AccidentRuleServiceInterface {
 
     Collection<AccidentRule> findAll();
 
-    boolean update(AccidentRule rule);
-
     void deleteById(int id);
 }

@@ -2,16 +2,16 @@ package ru.job4j.accidents.service.accident;
 
 import org.springframework.stereotype.Service;
 import ru.job4j.accidents.model.Accident;
-import ru.job4j.accidents.repository.hbm.AccidentHibernate;
+import ru.job4j.accidents.repository.accident.SpringDataAccidentRepository;
 
 import java.util.*;
 
 @Service
 public class AccidentService implements AccidentServiceInterface {
-    private final AccidentHibernate accidentsRepository;
+    private final SpringDataAccidentRepository accidentsRepository;
 
-    public AccidentService(AccidentHibernate accidentsRepository) {
-        this.accidentsRepository = accidentsRepository;
+    public AccidentService(SpringDataAccidentRepository accidentsRepository1) {
+        this.accidentsRepository = accidentsRepository1;
     }
 
     @Override
@@ -26,12 +26,7 @@ public class AccidentService implements AccidentServiceInterface {
 
     @Override
     public Collection<Accident> findAll() {
-        return accidentsRepository.findAll();
-    }
-
-    @Override
-    public boolean update(Accident accident) {
-        return accidentsRepository.update(accident);
+        return (Collection<Accident>) accidentsRepository.findAll();
     }
 
     @Override

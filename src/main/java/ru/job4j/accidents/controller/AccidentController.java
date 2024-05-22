@@ -52,7 +52,7 @@ public class AccidentController {
     public String update(@ModelAttribute Accident accident, @RequestParam("typeId") int typeId, @RequestParam("ruleIds") List<Integer> ruleIds) {
         accident.setType(accidentTypeService.findById(typeId).orElse(null));
         accident.setRules(new HashSet<>(accidentRuleService.findByIds(ruleIds)));
-        accidentService.update(accident);
+        accidentService.save(accident);
         return "redirect:/index";
     }
 }

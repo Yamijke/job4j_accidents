@@ -12,7 +12,5 @@ public interface AccidentTypeServiceInterface {
 
     Collection<AccidentType> findAll();
 
-    boolean update(AccidentType type);
-
     void deleteById(int id);
 }

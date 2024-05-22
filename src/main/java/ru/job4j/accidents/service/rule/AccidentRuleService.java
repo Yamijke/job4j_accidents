@@ -2,15 +2,15 @@ package ru.job4j.accidents.service.rule;
 
 import org.springframework.stereotype.Service;
 import ru.job4j.accidents.model.AccidentRule;
-import ru.job4j.accidents.repository.rule.AccidentRuleMem;
+import ru.job4j.accidents.repository.rule.SpringDataAccidentRuleRepository;
 
 import java.util.*;
 
 @Service
 public class AccidentRuleService implements AccidentRuleServiceInterface {
-    private final AccidentRuleMem accidentRuleMem;
+    private final SpringDataAccidentRuleRepository accidentRuleMem;
 
-    public AccidentRuleService(AccidentRuleMem accidentRuleMem) {
+    public AccidentRuleService(SpringDataAccidentRuleRepository accidentRuleMem) {
         this.accidentRuleMem = accidentRuleMem;
     }
 
@@ -26,16 +26,11 @@ public class AccidentRuleService implements AccidentRuleServiceInterface {
 
     @Override
     public Collection<AccidentRule> findAll() {
-        return accidentRuleMem.findAll();
-    }
-
-    @Override
-    public boolean update(AccidentRule rule) {
-        return accidentRuleMem.update(rule);
+        return (Collection<AccidentRule>) accidentRuleMem.findAll();
     }
 
     public Collection<AccidentRule> findByIds(List<Integer> ids) {
-        return accidentRuleMem.findByIds(ids);
+        return accidentRuleMem.findByIdIn(ids);
     }
 
     @Override

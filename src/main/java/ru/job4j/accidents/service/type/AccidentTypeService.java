@@ -2,16 +2,16 @@ package ru.job4j.accidents.service.type;
 
 import org.springframework.stereotype.Service;
 import ru.job4j.accidents.model.AccidentType;
-import ru.job4j.accidents.repository.type.AccidentTypeMem;
+import ru.job4j.accidents.repository.type.SpringDataAccidentTypeRepository;
 
 import java.util.Collection;
 import java.util.Optional;
 
 @Service
 public class AccidentTypeService implements AccidentTypeServiceInterface {
-    private final AccidentTypeMem accidentTypeMem;
+    private final SpringDataAccidentTypeRepository accidentTypeMem;
 
-    public AccidentTypeService(AccidentTypeMem accidentTypeMem) {
+    public AccidentTypeService(SpringDataAccidentTypeRepository accidentTypeMem) {
         this.accidentTypeMem = accidentTypeMem;
     }
 
@@ -27,12 +27,7 @@ public class AccidentTypeService implements AccidentTypeServiceInterface {
 
     @Override
     public Collection<AccidentType> findAll() {
-        return accidentTypeMem.findAll();
-    }
-
-    @Override
-    public boolean update(AccidentType type) {
-        return accidentTypeMem.update(type);
+        return (Collection<AccidentType>) accidentTypeMem.findAll();
     }
 
     @Override
